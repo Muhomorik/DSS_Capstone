@@ -1,0 +1,224 @@
+---
+title: "Milestone Report"
+author: "Dmitri Peredera"
+date: "14 mars 2016"
+output: html_document
+---
+
+This document is an explanation of the major features of the data. 
+Document is produced with *echo=FALSE*. 
+
+** NOTE: ** install quanteda from GitHub or check the CRAN version (need >= 0.9.4).
+
+document should be concise and explain only the major features of the data you have identified and briefly summarize your plans for creating the prediction algorithm and Shiny app in a way that would be understandable to a non-data scientist manager. You should make use of tables and plots to illustrate important summaries of the data set. The motivation for this project is to: 
+
+## 1. Demonstrate that you've downloaded the data and have successfully loaded it in. ##
+
+1. For the purpose of this document some helper functions were created.
+    + *Helpers/DownloadFile()* - downloads and unzips file from web if file is missing.
+    + All paths are declared in the *Helpers/filePaths.R* file and loaded int the Global.
+    + *Helpers/CountFileLines()* - counts lines in file by reading them one by one.
+    + *Helpers/GetLongestLine()* - reads lines one by one and finds the longest line.
+
+
+```{r setpaths, echo=FALSE, message=FALSE}
+
+rm(list=ls())
+setwd("~/R Projects/Coursera/10 - DSS Capstone Project")
+
+#options(scipen=999)
+# Libraries
+library(quanteda)
+library(ggplot2)
+library(dplyr)
+library(gdata) # humanReadable 
+library(RColorBrewer)
+library(knitr) #kable
+
+```
+
+
+```{r loadFiles, echo=FALSE}
+
+source("Helpers/filePaths.R")
+source("Helpers/DownloadFile.R")
+source("Helpers/GetLongestLine.R")
+source("Helpers/CountFileLines.R")
+source("Helpers/MakeSample.R")
+source("Helpers/ReadAndCleanFile.R")
+source("Helpers/CreateCustomDfm.R")
+
+# Load if missing.
+DownloadFile()
+```
+
+The data consists of `r length(locales)` directories, each corresponding different language
+with 3 files in each. Those directories are: `r locales`.
+
+Files are a collection of posts in different social medias:
+
+* `r file.blogs` - blog posts.
+* `r file.news` - news.
+* `r file.twitter` - tweets.
+ 
+For the most, only the *`r loc.en_US`* locale is used in assignment.
+
+## 2. Create a basic report of summary statistics about the data sets ##
+
+```{r calcFileSize, echo=FALSE, cache=TRUE}
+
+# Calculate the longest row in file.
+size.blogs <- humanReadable(file.info(path_Us_blogs)$size, standard="SI", unit="MB")
+size.news <- humanReadable(file.info(path_Us_news)$size, standard="SI", unit="MB") 
+size.twitter <- humanReadable(file.info(path_Us_twitter)$size, standard="SI", unit="MB") 
+```
+
+```{r calcFileChars, echo=FALSE, cache=TRUE}
+
+# Calculate the longest row in file.
+longest.blogs <- format( GetLongestLine(path_Us_blogs), scientific=F, big.mark=",")
+longest.news <- format( GetLongestLine(path_Us_news), scientific=F, big.mark=",")
+longest.twitter <- format( GetLongestLine(path_Us_twitter), scientific=F, big.mark=",")
+```
+
+```{r calcFileLines, echo=FALSE, cache=TRUE}
+
+# Calculate the longest row in file.
+lines.blogs <- format( CountFileLines(path_Us_blogs), big.mark=",")
+lines.news <- format( CountFileLines(path_Us_news), big.mark=",")
+lines.twitter <- format( CountFileLines(path_Us_twitter), big.mark=",")
+```
+
+The biggest file is the *blogs* file and it has the longest, measured in chars, document.
+The smallest and shortest file award goes to the *twitter* set, but it has mot documents of all sets.
+
+File                | Size             | Number of lines   | Longest line
+------------------- |----------------- | ------------------| -------------
+`r file_Us_blogs`   | `r size.blogs`   | `r lines.blogs`   | `r longest.blogs`
+`r file_Us_news`    | `r size.news`    | `r lines.news`    | `r longest.news`
+`r file_Us_twitter` | `r size.twitter` | `r lines.twitter` | `r longest.twitter`
+
+Given the known Twitter limit of max Characters per tweet equal to **140**, the twitter file
+will require some cleaning before processing.
+
+
+## 3. Report any interesting findings that you amassed so far. ##
+
+### Cleaning ###
+
+As it was mentioned earlier, the twitter file contains some garbage. It has shown up, 
+that most of that garbage is UTF codes in plaint test like: 
+
+``<f0><U+009F><U+0098><U+0096><f0><U+009F><U+0098>``
+
+Those codes are deleted at read using a simple regEx: ``<(U\\+00..|f0)>``
+
+### Reading the file ###
+
+The file was too big to fit into the memory, so a small sample of first 25.000 lines
+was used. Given the total number of lines in files that was not a "fair" sample and
+there may be conveniences in the future.
+
+Another problem is the *twitter* file because it has a large amount of small lines.
+So, instead of reading first N-rows, the files are read line by line until the 
+given memory limit is reached by the *SampleFileByObjectSize* function.
+
+```{r makeSampl, echo=FALSE}
+
+# Take a sample of file if it doesn't exists and work with it later.
+MakeSampleByMemory()
+```
+
+For the analysis part the *quanteda* package was used instead of suggested *tm*
+because of speed and lower memory usage.
+
+There were some problems with the *quanteda*. Some documentation examples didn't
+worked as expected.
+
+* *dfm* didn't lowered the words after *tokenize*'er.
+* *toLower* couldn't accepted the tokenized object as documentation says.
+
+Most of the time, dfm objects would be constructed from texts or a corpus, without 
+calling tokenize() as an intermediate step. Here, the punctuation and numbers must
+be removes, the the tokenizer is called. As well as *toLower* before tokinizer.
+
+### Creating document-frequency matrix ###
+
+The easiest way to examine document is to create a document-frequency matrix.
+
+
+```{r dfm_Blogs, echo=F, cache=TRUE}
+
+lines.blogs <- ReadAndCleanFile(sample_Us_blogs)
+dfm.blogs <- CreateCustomDfm(lines.blogs, 1, F)
+```
+
+```{r dfm_News, echo=F, cache=TRUE}
+
+lines.news <- ReadAndCleanFile(sample_Us_news)
+dfm.news <- CreateCustomDfm(lines.news, 1, F)
+```
+
+```{r dfm_Twitter, echo=F, cache=TRUE}
+
+lines.twitter <- ReadAndCleanFile(sample_Us_twitter)
+dfm.twitter <- CreateCustomDfm(lines.twitter, 1, F)
+```
+
+```{r remove_lines, echo=F}
+rm(lines.blogs, lines.news, lines.twitter)
+```
+
+The produced DFM look like:
+
+* Blogs: `r dim(dfm.blogs)`
+* News: `r dim(dfm.news)`
+* Twitter: `r dim(dfm.twitter)`
+
+Side by side, the wordcloud looks like (blogs, news, twitts):
+
+```{r dfm_plot3, echo=TRUE, error=FALSE, warning=FALSE, message=FALSE, cache=TRUE}
+# A vector of the form c(nr, nc)
+par(mfrow=c(1,3))
+
+plot(dfm.blogs, max.words = 80, colors = brewer.pal(8, "Dark2"), scale = c(8, .5))
+plot(dfm.news, max.words = 80, colors = brewer.pal(8, "Dark2"), scale = c(8, .5))
+plot(dfm.twitter, max.words = 80, colors = brewer.pal(8, "Dark2"), scale = c(8, .5))
+
+```
+
+Top features of corresponding set are presented in tables.
+
+```{r feat_blogs, echo=TRUE, cache=TRUE}
+
+topFeatures.blogs <- topfeatures(dfm.blogs, decreasing=T, n=20)
+df_freq.blogs <- data.frame(keyName=names(topFeatures.blogs), value=topFeatures.blogs, row.names=NULL)
+kable(df_freq.blogs, caption = "Top features of Blogs DFM.")
+```
+
+```{r feat_news, echo=TRUE, cache=TRUE}
+
+topFeatures.news <- topfeatures(dfm.news, decreasing=T, n=20)
+df_freq.news <- data.frame(keyName=names(topFeatures.news), value=topFeatures.news, row.names=NULL)
+kable(df_freq.news, caption = "Top features of News DFM.")
+```
+
+```{r feat_twitter, echo=TRUE, cache=TRUE}
+
+topFeatures.twitter <- topfeatures(dfm.twitter, decreasing=T, n=20)
+df_freq.twitter <- data.frame(keyName=names(topFeatures.twitter), value=topFeatures.twitter, row.names=NULL)
+kable(df_freq.twitter, caption = "Top features of Twitter DFM.")
+```
+
+As said, there are some differences in the sets.
+
+## 4. Get feedback on your plans for creating a prediction algorithm and Shiny app. ##
+
+There is some uncertainty in the plans. Mostly, I plan to continue examine n Grams
+of order 1-2-3-4 and predicting the results based on a simple fall-back strategy.
+
+Try to find 4-grams and then move to lower numbers if nothing similar is found.
+
+The most concerning part is smoothing and predicting the unknown words.
+Another concern is a very limited amount of time (must be on the fly) and resources.
+
