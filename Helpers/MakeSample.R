@@ -90,33 +90,6 @@ MakeSampleByMemory <- function(objSize = 7224696, force = FALSE ){
 }
 
 
-MakeTrainTestByMemory <- function(inFile, 
-                                  outFileTrain, outFileTest, 
-                                  testSize = 20, objSize = 7224696, force = FALSE ){
-  # Runs the 'memory-sample' function and creates a small sample of data if needed.
-  # Takes following lines by memory as Tet
-  # Skips sample if file exists (checks if folder exists).
-  # Uses paths from filePaths.R.
-  #
-  # Args:
-  #   objSize: object size limit (appr).   
-  #   force: overwrites file if true.
-  
-  if (!dir.exists(samle.dir) || (force == TRUE)){
-    message("Processing samples files into the: ", paste0(getwd(), "/", samle.dir))
-    
-    dir.create(samle.dir)
-    TakeByObjectSize(path_Us_blogs, sample_Us_blogs, objSize)
-    TakeByObjectSize(path_Us_news, sample_Us_news, objSize)
-    TakeByObjectSize(path_Us_twitter, sample_Us_twitter, objSize)
-    
-  } else {
-    message("Processed samples files are in: ", paste0(getwd(), "/", samle.dir))
-  }
-}
-
-
-
 # Examples:
 # MakeSampleByMemory()
 
