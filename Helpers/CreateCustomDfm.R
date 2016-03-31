@@ -1,4 +1,4 @@
-CreateCustomDfm <- function(lines, n_grams, verbose = F){
+CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
   # Make a customized DFM from lines (vector).
   #
   # Args:
@@ -15,22 +15,60 @@ CreateCustomDfm <- function(lines, n_grams, verbose = F){
                   removeNumbers = T, 
                   removePunct = T, 
                   removeSeparators = T,
+                  #removeTwitter = T, # this one only removes hashtags. But we need it lates.
                   removeHyphens = T,
                   ngrams = n_grams,
+                  skip = skipGrams,
                   verbose = verbose
   )
   
-  #  Most of the time, users will construct dfm objects from texts or a corpus, 
+  # Most of the time, users will construct dfm objects from texts or a corpus, 
   # without calling tokenize() as an intermediate step.
   
   # The default behavior for ignoredFeatures when constructing ngrams using 
   # dfm(x, ngrams > 1) is to remove any ngram that contains any item in ignoredFeatures.
   ngrams <- dfm(tok,
-                toLower  = TRUE,
+                #toLower  = TRUE,
                 language = "english",
                 ignoredFeatures = stopwords("english"), 
-                stem = TRUE, 
-                #ngrams = 3, 
+                stem = FALSE, 
                 verbose = verbose)
-  invisible(ngrams)
+  
+  # remove strange features starting with a number (enumerations, clock and so on.)
+  ngrams<- selectFeatures(ngrams, c(
+                                    "a\\.k\\.a", "a's",
+                                    "u_([[:alnum:]]{4})", # utf codes, U+FF89>
+                                    "www\\.", # things that starts with www, webpages.
+                                    "(\\.com|\\.org|\\.edu|\\.net)", # pages, ends with .com.
+                                    "#", "@", # remove hashtags, hings that starts with hashtag :D
+                                    "(ha)+", # remove hahaha variants
+                                    "[[:digit:]]", # everynhing with digits.
+                                    "([^[:alnum:]_])",  #not Alphanumeric, garbage like ctrl.
+                                    "\\_.$", "^.\\_" # starts/stops with a single letter
+                                    ), 
+                 "remove", 
+                 valuetype = "regex",
+                 verbose = verbose)
+  
+  # commonn one-words.
+  selectFeatures(ngrams, c("rt", "aka", "ms", "ya", "yo", "ur", "oh", "da", "pm", "am", "xd",
+                           "idk", "etc", "co", "btw", "hm", "cc", 
+                           "b", "c", "d", "e", "f", "g", "h", "k", "m", "n", "o", 
+                           "r", "s", "t", "w", "u","y", "x", 
+                         "lol", "a1", "a3", "aa"), 
+                 "remove", 
+                 valuetype = "fixed",
+                 verbose = verbose)
 }
+
+# Example
+# df <- c("a's m lost a's may media a.k.a abc", "a3 cos a1 first aa preachers am aka @ ü ð 90am", 
+#         "@c d e f www.newamericantheatre.com www.notesfromaglobalperspective.blogspot.com",
+#         "ygjhheatre.com gfhpective.blogspot.com dsfgf.tumblr.com <U+062A>",
+#         "#milliondollarlistingnewyork #reasonswhythecrimerategoup <U+3082>",
+#         "<U+306E> <U+306E> <U+306F> <U+5728> <U+306E> <U+3066>",
+#         "hahahahahahahahahahahahahahahahahahahahahaha hahahahahahahahahahahahahaha hahahaha",
+#         "w.beyondthescoreboard.net_report tweeting_#momletemilygoseeaustin")
+# 
+# x <- CreateCustomDfm(df, 2, verbose = T)
+# x

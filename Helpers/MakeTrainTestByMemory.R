@@ -1,3 +1,5 @@
+# setwd("~/R Projects/Coursera/10 - DSS Capstone Project")
+
 source("Helpers/filePaths.R")
 
 MakeTrainTestByMemory <- function(inFile, 
@@ -74,4 +76,10 @@ MakeTrainTestByMemory <- function(inFile,
 # 
 # MakeTrainTestByMemory(path_Us_twitter, 
 #   out.path_Us_twitter_train, out.path_Us_twitter_test, 
+#   objSize = 14449392,
 #   force = T)
+
+# MakeTrainTestByMemory(path_Us_twitter, 
+#   out.path_Us_twitter_train, out.path_Us_twitter_test, 
+#   force = T)
+# 
