@@ -10,7 +10,7 @@ SQLtable.Grams3 <- "grams3"
 SQLtable.Grams4 <- "grams4"
 SQLtable.Grams5 <- "grams5"
 
-SQLtable <-c("grams1", "grams2", "grams3", "grams4", "grams5", "grams6")
+SQLtable <-c("grams1", "grams2", "grams3", "grams4", "grams5")
 
 GQLiteGetTablebyNGrams <- function(nGrams){
   # Get table name for current NGrams number.
