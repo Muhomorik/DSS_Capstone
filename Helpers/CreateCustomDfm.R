@@ -30,7 +30,7 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
   ngrams <- dfm(tok,
                 #toLower  = TRUE,
                 language = "english",
-                ignoredFeatures = stopwords("english"), 
+                ignoredFeatures = stopwords("english"), # prediction fails as hell. 
                 stem = FALSE, 
                 verbose = verbose)
   

@@ -1,5 +1,3 @@
-# setwd("~/R Projects/Coursera/10 - DSS Capstone Project")
-
 source("Helpers/filePaths.R")
 
 MakeTrainTestByMemory <- function(inFile, 

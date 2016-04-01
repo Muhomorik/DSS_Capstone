@@ -15,7 +15,8 @@ source("Helpers/MakeTrainTestByMemory.R")
 source("Helpers/CreateCustomDfm.R")
 source("Helpers/SplitDtByGrams.R")
 
-source("TestNGrams/CreateDocFreq.R")
+source("Helpers/CreateDocFreq.R")
+source("Helpers/GetSkipGramMax.R")
 
 source("HelpersSQLite/SQLiteHelpers.R")
 
@@ -23,12 +24,11 @@ linesTwitter.Train <- ReadAndCleanFile("sample/train_en_US.twitter.txt")
 #linesTwitter.Train <- ReadAndCleanFile(path_Us_twitter)
 
 # Run parameters
-skipgrams.Max <- 0 #use 6 for ngrams 2
-nGrams.Max <- 3
+nGrams.Max <- 4
 
 # Filter parameters, everything below or equal to will be dropped from results.
 # Index = ngrams number.
-filterCnt <- c(3, 5, 8, 15, 24)
+filterCnt <- c(0, 3, 5, 8, 15, 24)
 
 # Table columns for printing.
 df_names <- c(
@@ -46,14 +46,14 @@ for(ngrams.i in 1:nGrams.Max){
   
   # Loop skip-Grams                
   #for(skipgrams.i in 0:skipgrams.Max){
-    skipGrams <- 0:skipgrams.Max
+    skipGrams <- 0:GetSkipGramMax(ngrams.i)
     
     message("Calculating skip-Grams: ", paste( skipGrams, collapse = " "))
     
     # Get both docFreq's
     freqDt.train <- CreateDocFreq(linesTwitter.Train, 
                                   n_grams = ngrams.i, skipGrams = skipGrams, 
-                                  trim=T)
+                                  trim=T, verbose = T)
     
     invisible(gc())
     
@@ -79,7 +79,6 @@ for(ngrams.i in 1:nGrams.Max){
     names(df.new) <- df_names
     # Add to df.
     df <- rbind(df,df.new)
-    rm(df)
   #}
 }
 
@@ -88,3 +87,4 @@ dbDisconnect(con)
 
 # Print sizes of grams.
 kable(df, format = "markdown", caption = "SkipGrams perfomance")
+rm(df)

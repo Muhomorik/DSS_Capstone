@@ -11,7 +11,7 @@ source("Helpers/filePaths.R")
 source("Helpers/ReadAndCleanFile.R")
 source("Helpers/MakeTrainTestByMemory.R")
 source("Helpers/CreateCustomDfm.R")
-source("TestNGrams/CreateDocFreq.R")
+source("Helpers/CreateDocFreq.R")
 
 source("HelpersSQLite/SQLiteHelpers.R")
 

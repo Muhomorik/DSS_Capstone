@@ -6,6 +6,7 @@ SplitDtByGrams <- function(dt, nGrams){
   #   nGrams: NGrams for slitting.  
 
   if ( nGrams == 1) {
+    setnames(dt,"keyName","key1")
     dt
   } else if ( nGrams == 2) {
     dt[,c("key1", "key2") := tstrsplit(keyName, "_", fixed=TRUE)][,keyName:=NULL]
