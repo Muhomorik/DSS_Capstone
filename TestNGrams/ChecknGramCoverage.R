@@ -13,6 +13,8 @@ source("Helpers/MakeTrainTestByMemory.R")
 source("Helpers/CreateCustomDfm.R")
 source("TestNGrams/CreateDocFreq.R")
 
+source("HelpersSQLite/SQLiteHelpers.R")
+
 linesTwitter.Train <- ReadAndCleanFile("sample/train_en_US.twitter.txt")
 linesTwitter.Test <- ReadAndCleanFile("sample/test_en_US.twitter.txt")
 
@@ -34,8 +36,9 @@ df = data.frame(nGrams = numeric(), skipGram = character(),
                 ResultNotInTrain = numeric(),
                 ResultTest = numeric(), ResultTrain = numeric(), TestTrain = numeric()
 )
-# r,y,d,s,t,b
-skipgrams.Max <- 1 #use 6 for ngrams 2
+
+# Define params.
+skipgrams.Max <- 2 #use 6 for ngrams 2
 nGrams <- 2
 
 # force skipgrams to 0 for nGrams=0. Ignored, but will create extra loops.
@@ -48,11 +51,10 @@ for(skipgrams.i in 0:skipgrams.Max){
   skipGrams <- 0:skipgrams.i
 
   message("Calculating skipgrams: ", paste( skipGrams, collapse = " "))
-#skipGrams <- 0:skipgrams.Max
 
 # Get both docFreq's
 freqDt.train <- CreateDocFreq(linesTwitter.Train, n_grams = nGrams, skipGrams = skipGrams, trim=T)
-freqDt.test <- CreateDocFreq(linesTwitter.Test, n_grams = nGrams, skipGrams = 0) # no skips
+freqDt.test <- CreateDocFreq(linesTwitter.Test, n_grams = nGrams, skipGrams = 0, trim=T) # no skips
 invisible(gc())
 
 # fix different names
@@ -77,8 +79,6 @@ dim.Test <- dim(freqDt.test)[1]
 dim.Train <- dim(freqDt.train)[1]
 
 # Create table with results.
-
-
 df.new = data.frame(nGrams, paste(skipGrams, collapse = ","),
                 dim.Train, dim.Test, 
                 dim.Result,             
@@ -99,3 +99,15 @@ kable(df, format = "markdown", caption = "SkipGrams perfomance")
 # trim(td, sparsity = 0.7)
 
 #freqDt.train[,long:=nchar(keyName)][long>3]
+freqDt.train <- freqDt.train[,long:=nchar(keyName)]
+
+# TODO: remove with length (garbage)
+# 1grams: letters with 3
+# 2grams: >5
+# 3grams: 8
+# 4grams: no skipgrams, min 15(14)
+# 5grams: no skipgrams, incl 24
+# 6 - no need
+
+# freqDt.train <- freqDt.train[,long:=NULL]
+

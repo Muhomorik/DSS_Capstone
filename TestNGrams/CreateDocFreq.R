@@ -5,7 +5,7 @@ CreateDocFreq <- function(lines, n_grams, skipGrams=0, verbose = F, trim=F){
   # trim
   if(trim) dfm.train <- trim(dfm.train, minCount = 2, verbose = T)
   
-  df.train <- docfreq(dfm.train, scheme = "inversemax", k=1, smoothing = 1)
+  df.train <- docfreq(dfm.train, scheme = "inversemax", k = 1, smoothing = 1)
   
   # Create dt from docfreq.
   freqDt.train <-  as.data.table(df.train, key=names(df.train),  keep.rownames=T) # must keep rownames or 1 col.
@@ -18,3 +18,7 @@ CreateDocFreq <- function(lines, n_grams, skipGrams=0, verbose = F, trim=F){
   
   invisible(freqDt.train)
 }
+
+# Examples:
+#line<- "abc abc"
+#gsub("/(\b\\w+\b)(?:\\s*\1)+/", "R", line, perl = T)
