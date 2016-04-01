@@ -37,7 +37,7 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
   # remove strange features starting with a number (enumerations, clock and so on.)
   ngrams<- selectFeatures(ngrams, c(
                                     "a\\.k\\.a", "a's",
-                                    "u_([[:alnum:]]{4})", # utf codes, U+FF89>
+                                    "u_([[:alnum:]]{4})", "f0", # utf codes, U+FF89>
                                     "www\\.", # things that starts with www, webpages.
                                     "(\\.com|\\.org|\\.edu|\\.net)", # pages, ends with .com.
                                     "#", "@", # remove hashtags, hings that starts with hashtag :D
@@ -70,5 +70,13 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
 #         "hahahahahahahahahahahahahahahahahahahahahaha hahahahahahahahahahahahahaha hahahaha",
 #         "w.beyondthescoreboard.net_report tweeting_#momletemilygoseeaustin")
 # 
-# x <- CreateCustomDfm(df, 2, verbose = T)
+# x <- CreateCustomDfm(df, 1, verbose = T)
 # x
+
+# mytexts <- c("The new law included a capital gains tax, and an inheritance tax.",
+#              "New York City has raised a taxes: an income tax and a sales tax.")
+# x2 <- CreateCustomDfm(mytexts, 1, verbose = T)
+# x2
+# 
+# x3 <- x+x2
+# x3
