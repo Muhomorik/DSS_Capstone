@@ -1,5 +1,3 @@
-source("Helpers/filePaths.R")
-
 DownloadFile <- function(force = FALSE){
   # Download file function. Uri must have a proper ending (like .csv).
   # Skips download if file exists (checks if folder exists).

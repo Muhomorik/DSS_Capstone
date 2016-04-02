@@ -1,5 +1,3 @@
-source("Helpers/filePaths.R")
-
 MakeTrainTestByMemory <- function(inFile, 
                                   outFileTrain, outFileTest, 
                                   testSize = 0.2, objSize = 7224696, force = FALSE ){

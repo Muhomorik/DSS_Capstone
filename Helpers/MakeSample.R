@@ -1,5 +1,3 @@
-source("Helpers/filePaths.R")
-
 # Helpers to create a small file from a large file by reading it from the beginning.
 # 1. Sample by N-lines.
 # 2. Sample by momory limit.
