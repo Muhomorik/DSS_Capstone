@@ -30,5 +30,9 @@ CreateDocFreq <- function(lines, n_grams, skipGrams=0, verbose = F, trim=F){
 }
 
 # Examples:
-#line<- "abc abc"
-#gsub("/(\b\\w+\b)(?:\\s*\1)+/", "R", line, perl = T)
+
+# linesTwitter.Train <- ReadAndCleanFile(path_Us_twitter, nlines = linesToRead)
+# freqDt.train <- CreateDocFreq(linesTwitter.Train, 
+#                               n_grams = 1, 
+#                               skipGrams = 0, 
+#                               trim=T, verbose = T)

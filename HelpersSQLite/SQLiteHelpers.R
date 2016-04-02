@@ -51,4 +51,29 @@ SQLiteWriteTable <- function(con, tableName, dt){
 #     keyName COLLATE NOCASE ASC)")
   
   #dbClearResult(res)
+  ""
+}
+
+SQLiteWriteTableStatus <- function(con, dt){
+  # Rewrites the status table from dt.
+  #
+  # Args:
+  #   con: connection to db.
+  #   tableName: table to write to.
+  #   dt: data.table to write.
+  
+  tableName <- "runStatus"
+  # remove if exists
+  tables <- dbListTables(con)
+  if(tableName %in% tables) dbRemoveTable(con, tableName)
+  
+  dbWriteTable(con, tableName, dt)
+  
+  # Create index for faster search. Increases size a bit!.
+  #   dbSendQuery(conn = con,
+  #               "CREATE INDEX byKeyValue ON grams1 (
+  #     keyName COLLATE NOCASE ASC)")
+  
+  #dbClearResult(res)
+  ""
 }

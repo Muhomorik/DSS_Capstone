@@ -10,7 +10,7 @@ ReadAndCleanFile <- function(textFile,  nlines = -1L){
   
   # Read data
   con  <- file(textFile, open = "r")
-  oneLine <- readLines(con,  warn = FALSE, encoding = "UTF-8", n = nlines)
+  oneLine <- readLines(con, encoding = "UTF-8", n = nlines, warn = TRUE, skipNul = TRUE)
   close(con)
   
   # Escape unifode madness like: <f0><U+009F><U+0098><U+0096><f0><U+009F><U+0098>

@@ -81,3 +81,7 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
 # 
 # x3 <- x+x2
 # x3
+
+
+#linesTwitter.Train <- ReadAndCleanFile(path_Us_twitter, nlines = linesToRead)
+#dfm.train <- CreateCustomDfm(linesTwitter.Train, n_grams = 1, skipGrams = 0, T)
