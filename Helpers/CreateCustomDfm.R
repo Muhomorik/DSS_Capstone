@@ -44,7 +44,8 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
                                     "(ha)+", # remove hahaha variants
                                     "[[:digit:]]", # everynhing with digits.
                                     "([^[:alnum:]_])",  #not Alphanumeric, garbage like ctrl.
-                                    "\\_.$", "^.\\_" # starts/stops with a single letter
+                                    "\\_.$", "^.\\_",  # starts/stops with a single letter
+                                    "\\_(.)\\_" # one letter in the middlwé.
                                     ), 
                  "remove", 
                  valuetype = "regex",

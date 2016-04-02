@@ -7,7 +7,7 @@ QueryStringLevel1 <- function(key1, limit = 20){
   #   key1: ngram 1
   #   limit: max results
   
-  q1 <- paste ("SELECT * FROM ", GQLiteGetTablebyNGrams(1), " WHERE ", 
+  q1 <- paste ("SELECT * FROM ", SQLiteGetTablebyNGrams(1), " WHERE ", 
                "key1 LIKE '", key1, "'",
                " LIMIT ", limit,
                sep = "", collapse = NULL)
@@ -22,7 +22,7 @@ QueryStringLevel2 <- function(key1, key2 = NULL, limit = 20){
   #   key2: ngram 2
   #   limit: max results
   
-  q3 <- paste ("SELECT * FROM ", GQLiteGetTablebyNGrams(2), " WHERE ", 
+  q3 <- paste ("SELECT * FROM ", SQLiteGetTablebyNGrams(2), " WHERE ", 
                "key1 LIKE '", key1, "%'",
                sep = "", collapse = NULL)
   
@@ -48,7 +48,7 @@ QueryStringLevel3 <- function(key1, key2 = NULL, key3 = NULL, limit = 20){
   #   key3: ngram 3
   #   limit: max results
   
-  q3 <- paste ("SELECT * FROM ", GQLiteGetTablebyNGrams(3), " WHERE ", 
+  q3 <- paste ("SELECT * FROM ", SQLiteGetTablebyNGrams(3), " WHERE ", 
                "key1 LIKE '", key1, "%'",
                sep = "", collapse = NULL)
   
@@ -80,7 +80,7 @@ QueryStringLevel4 <- function(key1, key2 = NULL, key3 = NULL, key4 = NULL, limit
   #   key4: ngram 4
   #   limit: max results
 
-  q3 <- paste ("SELECT * FROM ", GQLiteGetTablebyNGrams(4), " WHERE ", 
+  q3 <- paste ("SELECT * FROM ", SQLiteGetTablebyNGrams(4), " WHERE ", 
                "key1 LIKE '", key1, "%'",
                sep = "", collapse = NULL)
   

@@ -12,7 +12,7 @@ SQLtable.Grams5 <- "grams5"
 
 SQLtable <-c("grams1", "grams2", "grams3", "grams4", "grams5")
 
-GQLiteGetTablebyNGrams <- function(nGrams){
+SQLiteGetTablebyNGrams <- function(nGrams){
   # Get table name for current NGrams number.
   #
   # Args:
@@ -31,7 +31,7 @@ SQLiteGetConn <- function(filePath){
 }
 
 
-SQLiteeWriteTable <- function(con, tableName, dt){
+SQLiteWriteTable <- function(con, tableName, dt){
   # Drops the table and cteated new with values from dt.
   #
   # Args:

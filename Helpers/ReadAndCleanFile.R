@@ -16,6 +16,7 @@ ReadAndCleanFile <- function(textFile,  nlines = -1L){
   # Escape unifode madness like: <f0><U+009F><U+0098><U+0096><f0><U+009F><U+0098>
   oneLine <- gsub("<(U\\+([[:alnum:]]{4}))>", " ", oneLine, ignore.case = T)
   oneLine <- gsub("â€™", "’", oneLine, ignore.case = T)
+  oneLine <- gsub("\\_", "", oneLine, ignore.case = T) # this is bug, won't create right ngrams.
   
   invisible(oneLine)
 }
