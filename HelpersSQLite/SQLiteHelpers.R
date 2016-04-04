@@ -30,7 +30,6 @@ SQLiteGetConn <- function(filePath){
   dbConnect(RSQLite::SQLite(), dbname = filePath)
 }
 
-
 SQLiteWriteTable <- function(con, tableName, dt){
   # Drops the table and cteated new with values from dt.
   #

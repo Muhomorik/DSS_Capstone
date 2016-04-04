@@ -30,7 +30,7 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
   ngrams <- dfm(tok,
                 #toLower  = TRUE,
                 language = "english",
-                ignoredFeatures = stopwords("english"), # prediction fails as hell. 
+                #ignoredFeatures = stopwords("english"), # prediction fails as hell. 
                 stem = FALSE, 
                 verbose = verbose)
   
@@ -43,9 +43,10 @@ CreateCustomDfm <- function(lines, n_grams, skipGrams=0, verbose = F){
                                     "#", "@", # remove hashtags, hings that starts with hashtag :D
                                     "(ha)+", # remove hahaha variants
                                     "[[:digit:]]", # everynhing with digits.
-                                    "([^[:alnum:]_])",  #not Alphanumeric, garbage like ctrl.
-                                    "\\_.$", "^.\\_",  # starts/stops with a single letter
-                                    "\\_(.)\\_" # one letter in the middlwé.
+                                    "([^[:alnum:]_])"#,  #not Alphanumeric, garbage like ctrl.
+                                    # Those only with stpwords.
+                                    #"\\_.$", "^.\\_",  # starts/stops with a single letter
+                                    #"\\_(.)\\_" # one letter in the middle.
                                     ), 
                  "remove", 
                  valuetype = "regex",
