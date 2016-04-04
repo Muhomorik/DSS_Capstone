@@ -46,7 +46,7 @@ if(length(args) != 0) {
 } else {
   # Run parameters, from script (here)
   nGrams.Min <- 1
-  nGrams.Max <- 4  
+  nGrams.Max <- 2  
 }
 
 # Starting headers
@@ -60,7 +60,7 @@ linesMax.Twiter <- 2360148
 scaling <-  c(1, 4, 14, 3, 3) # w/o stopwords, 1gram, 2 gram, etc
 
 #                      1  2   3  4  5
-scaling.stopword <-  c(5, 5, 5, 5, 5) # 1gram, 2 gram, etc
+scaling.stopword <-  c(1, 3, 3, 3, 3) # 1gram, 2 gram, etc
 
 # Filter parameters, everything below or equal to will be dropped from results.
 # Index = ngrams number.
@@ -74,6 +74,8 @@ con <- SQLiteGetConn(db_file)
 
 # Loop N-Grams
 for(ngrams.i in nGrams.Min:nGrams.Max){
+  # Measure current loop.
+  start.time_iteration <- Sys.time()
   # ngrams.i <- 1
   
   if(linesInFIle != -1){
@@ -85,12 +87,15 @@ for(ngrams.i in nGrams.Min:nGrams.Max){
   linesTwitter.Train <- ReadAndCleanFile(path_Us_twitter, nlines = linesToRead)
   
   if(linesInFIle == -1) linesInFIle <- length(linesTwitter.Train)
+  
+  skipGrams <- 0:GetSkipGramMax(ngrams.i)  
   cat("Calculating N-Grams: ", ngrams.i, 
-          ". Reading lines: ", format(linesToRead, big.mark = ","),
-          " Obj.size: ", format(object.size(linesTwitter.Train), units="Mb"), "\n")
-    
-  skipGrams <- 0:GetSkipGramMax(ngrams.i)
-  cat("Calculating skip-Grams: ", paste( skipGrams, collapse = " "), "\n")
+      " ,skipGrams: ", paste( skipGrams, collapse = " "), "\n"
+  )
+  cat("Reading 1/", scaling.stopword[ngrams.i], "of file",
+      ". Reading lines: ", format(linesToRead, big.mark = ","),
+      " Obj.size: ", format(object.size(linesTwitter.Train), units="Mb"), "\n"      
+  )
     
   # Get docFreq's
   freqDt.train <- CreateDocFreq(linesTwitter.Train, 
@@ -107,9 +112,16 @@ for(ngrams.i in nGrams.Min:nGrams.Max){
   # Close connection (skip TRUE).
   invisible(dbDisconnect(con))
   
+  # Stop measuring loop.
+  end.time_iteration <- Sys.time()
+  time.time_iteration <- end.time_iteration - start.time_iteration
+  cat("Done in: ", time.time_iteration, "\n")
+  
   # Create info-table.
   dim.Train <- dim(freqDt.train)[1]
-  df.new <- StatusTableGramsDfItem(ngrams.i, skipGrams, dim.Train, scaling.stopword[ngrams.i])
+  df.new <- StatusTableGramsDfItem(ngrams.i, skipGrams, dim.Train, 
+                                   scaling.stopword[ngrams.i],
+                                   time.time_iteration)
   # Add to df.
   df <- rbind(df,df.new)
   

@@ -8,15 +8,15 @@ StatusTableGramsEmptyDf <- function() {
   #   Empty data.frame with pre-defined columns.
   
   df_names <- c(
-    "nGram", "skipGram", "GramsSize", "scaling")
+    "nGram", "skipGram", "GramsSize", "scaling", "runtime")
   
   # Empty df.
   df = data.frame(nGrams = integer(), skipGram = integer(), GramsSize = integer(),
-                  scaling = integer())
+                  scaling = integer(), runtime = numeric())
 }
 
 
-StatusTableGramsDfItem <- function(nGrams, skipGrams, gramsSize, scaling) {
+StatusTableGramsDfItem <- function(nGrams, skipGrams, gramsSize, scaling, runtime) {
   # Creates a filled data.frame that is used to report ngram builder results.
   #
   # Returns:
@@ -24,13 +24,13 @@ StatusTableGramsDfItem <- function(nGrams, skipGrams, gramsSize, scaling) {
   
   # Table columns for printing.
   df_names <- c(
-    "nGram", "skipGram", "GramsSize", "scaling")
+    "nGram", "skipGram", "GramsSize", "scaling", "runtime")
   
   # df.
   df.new = data.frame(nGrams, 
                       paste(skipGrams, collapse = ","),
                       round(gramsSize, digits = 0),
-                      scaling
+                      scaling, runtime
   )
   names(df.new) <- df_names
   df.new

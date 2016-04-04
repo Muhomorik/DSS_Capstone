@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## About ##
 
-:no_entry_sign: This document is automatically generated from [Readme.Rmd](Readme.Rmd) :no_entry_sign:
+:no_entry_sign: This document is automatically generated from [README.Rmd](README.Rmd) :no_entry_sign:
 
 Diagrams are created using [Pencil](http://pencil.evolus.vn/) (.ep file).
 
