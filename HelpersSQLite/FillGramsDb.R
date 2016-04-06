@@ -7,6 +7,7 @@ setwd("~/R Projects/Coursera/10 - DSS Capstone Project")
 start.time <- Sys.time()
 
 source("Helpers/filePaths.R")
+source("Helpers/DownloadFile.R")
 source("Helpers/ReadAndCleanFile.R")
 source("Helpers/MakeTrainTestByMemory.R")
 source("Helpers/CreateCustomDfm.R")
@@ -34,6 +35,9 @@ suppressWarnings(library(beepr, quietly = T, warn.conflicts = F)) # beep!
 #linesTwitter.Train <- ReadAndCleanFile(pth)
 #linesTwitter.Train <- ReadAndCleanFile("sample/train_en_US.twitter.txt")
 #linesTwitter.Train <- ReadAndCleanFile(path_Us_twitter)
+
+# Download file
+DownloadFile()
 
 # Command line args
 args <- commandArgs(trailingOnly = TRUE)
@@ -69,6 +73,8 @@ scaling.stopword <-  c(1, 3, 3, 3, 3) # 1gram, 2 gram, etc
 df = StatusTableGramsEmptyDf()
 
 db_file <- "grams_db1.sqlite"
+cat("Using database: ", db_file, "\n")
+
 # Open db connection.
 con <- SQLiteGetConn(db_file)
 
