@@ -14,10 +14,10 @@ Foreword
 This is a final project for [Data Science Specialization](https://www.coursera.org/specializations/jhu-data-science) at Coursera.
 
 -   [Milestone report HTML](http://htmlpreview.github.io/?https://github.com/Muhomorik/DSS_Capstone/blob/master/Milestone_Report.html)
--   [Slide deck](https://github.com/Muhomorik/DSS_Capstone), R Presentation.
+-   [Slide deck](http://rpubs.com/Muhomorik/dssSlides), R Presentation.
 -   [ShinyApp](https://muhomorik.shinyapps.io/DssSwiftKeyApp/), when running.
 
-This is a **longer** version of *About* page on the ShinyApps.
+This is a **longer** version of *About* page on the Shiny Apps.
 
 Data files are not included, they are &gt;500Mb in size, but are downloaded by the ngrams generator.
 
@@ -26,7 +26,7 @@ Ready database is not included either because it's too big. It also takes quite 
 Structure
 =========
 
-![app\_structure](DssSwiftKeyApp/myimg/App.png) *App flow*
+![app\_structure](myimg/App.png) *App flow*
 
 The app includes offline part, pre-processing database, and online and online part, app.
 
@@ -37,18 +37,19 @@ Some top predictors are listed in the Examples section, try entering them slowly
 Some numbers
 ------------
 
-NGrams by N-size chart and creation time for each ngram table in hours. TODO: when new table is done
+NGrams by N-size chart and creation time for each ngram table in hours.
 
 ![](README_files/figure-markdown_github/chartNgramSize-1.png)<!-- -->
 
 Same table in text, the scaling defines the size of corpus (2 means 1/2 of file).
 
-<table style="width:71%;">
+<table style="width:85%;">
 <colgroup>
 <col width="13%" />
 <col width="18%" />
 <col width="19%" />
-<col width="19%" />
+<col width="16%" />
+<col width="16%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -56,37 +57,42 @@ Same table in text, the scaling defines the size of corpus (2 means 1/2 of file)
 <th align="left">skipGram</th>
 <th align="left">GramsSize</th>
 <th align="left">scaling</th>
+<th align="left">runtime</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left"><p>1</p></td>
 <td align="left"><pre><code>0</code></pre></td>
-<td align="left"><p>49047</p></td>
-<td align="left"><pre><code>5</code></pre></td>
+<td align="left"><p>109249</p></td>
+<td align="left"><pre><code>1</code></pre></td>
+<td align="left"><pre><code>4</code></pre></td>
 </tr>
 <tr class="even">
 <td align="left"><p>2</p></td>
 <td align="left"><pre><code>0</code></pre></td>
-<td align="left"><p>81016</p></td>
-<td align="left"><pre><code>5</code></pre></td>
+<td align="left"><p>504013</p></td>
+<td align="left"><pre><code>3</code></pre></td>
+<td align="left"><p>5.5</p></td>
 </tr>
 <tr class="odd">
 <td align="left"><p>3</p></td>
 <td align="left"><pre><code>0</code></pre></td>
-<td align="left"><p>54776</p></td>
-<td align="left"><pre><code>5</code></pre></td>
+<td align="left"><p>543075</p></td>
+<td align="left"><pre><code>3</code></pre></td>
+<td align="left"><p>16.1</p></td>
 </tr>
 <tr class="even">
 <td align="left"><p>4</p></td>
 <td align="left"><pre><code>0</code></pre></td>
-<td align="left"><p>18103</p></td>
-<td align="left"><pre><code>5</code></pre></td>
+<td align="left"><p>275753</p></td>
+<td align="left"><pre><code>3</code></pre></td>
+<td align="left"><p>18.5</p></td>
 </tr>
 </tbody>
 </table>
 
-For storage, the SQLite database is used. Db stores values in binary format. That is very compact and only takes **5.7 MB**.
+For storage, the SQLite database is used. Db stores values in binary format. That is very compact and only takes **44.0 MB**.
 
 Prediction
 ----------
@@ -99,11 +105,11 @@ My own tests shows 68-75% coverage for bigrams depending on skip-grams and test 
 
 To illustrate the idea all intermediate steps return prediction.
 
-![predictionScheme](DssSwiftKeyApp/myimg/StupidBackof.png)
+![predictionScheme](myimg/StupidBackof.png)
 
 I am using [quanteda](https://github.com/kbenoit/quanteda) package and `inversemax` weightening scheme described here: [https://en.wikipedia.org/wiki/Tf–idf](https://en.wikipedia.org/wiki/Tf–idf).
 
-![weight\_inversemax](DssSwiftKeyApp/myimg/weight_inversemax.png) *inversemax formula*
+![weight\_inversemax](myimg/weight_inversemax.png) *inversemax formula*
 
 The inverse document frequency is a measure of how much information the word provides, that is, whether the term is common or rare across all documents. Basically, as a term appears in more documents, the ratio inside the logarithm approaches 1, bringing the idf and tf-idf closer to 0.
 
@@ -112,7 +118,7 @@ In other words, in this application lower values is better.
 How it works (short)
 --------------------
 
-![how\_works\_short](DssSwiftKeyApp/myimg/Prediction.png) *Prediction output back to user*
+![how\_works\_short](myimg/Prediction.png) *Prediction output back to user*
 
 Pre-processed values are stored in the SQLite database and accessed using the [RSQlite](https://github.com/rstats-db/RSQLite) package.
 
@@ -123,11 +129,11 @@ Data analysis
 
 Analysis was done using the `ChecknGramCoverage.R` script (not included?)
 
-![app](DssSwiftKeyApp/myimg/Filter.png) *Exploratory data analysis*
+![app](myimg/Filter.png) *Exploratory data analysis*
 
 Script takes a small sample as Train set and a next sample, not included in Train as Test set. Sample is around 3Mb,
 
-Same rules ar applied to both sets. Then both results are merged into the *data.table* and merged using the `LEFT OUTER JOIN`.
+Same rules are applied to both sets. Then both results are merged into the *data.table* and merged using the `LEFT OUTER JOIN`.
 
 The `LEFT OUTER JOIN` returns all the rows from the left table, filling in matched columns (or NA) from the right table. After that, the row filter is applied, filtering `NA` values on Train.
 
@@ -149,17 +155,17 @@ Creating database.
 
 The prediction data, ngrams, are stored in the single SQLite database file. can easy be viewed and edited using the (SQLiteStudio (free))\[<http://sqlitestudio.pl/>\].
 
-![app](DssSwiftKeyApp/myimg/FillGramsDb.png) *ngrams generator flow*
+![app](myimg/FillGramsDb.png) *ngrams generator flow*
 
 The database is created by running a single `FillGramsDb.R` file. File accepts *minimum* and *maximum* ngrams values to be calculated and has some configuration for other parameters inside.
 
-The script loops he ngrams and writes words to the database file: DssSwiftKeyApp/grams\_db1.sqlite
+The script loops he ngrams and writes words to the database file: grams\_db1.sqlite
 
-![app](DssSwiftKeyApp/myimg/FillGrams_running.png) *ngrams generator running*
+![app](myimg/FillGrams_running.png) *ngrams generator running*
 
 Image shows generator running inside the [conEmu](https://conemu.github.io/) windows terminal (it's like cmd.exe, but with tabs).
 
-Best way to run it is to creare a `cmd` script with `Rscript.exe`.
+Best way to run it is to create a `cmd` script with `Rscript.exe`.
 
 ``` r
 "C:\Program Files\Microsoft\MRO\R-3.2.3\bin\Rscript.exe" "HelpersSQLite\FillGramsDb.R" 1 4
@@ -169,7 +175,7 @@ The R file can be passed to the `Rscript.exe` and will execute in it's own sessi
 
 Multiple files can be run at the same time without interfering with each other.
 
-![app](DssSwiftKeyApp/myimg/FillGrams_cmd.png) *cmd file*
+![app](myimg/FillGrams_cmd.png) *cmd file*
 
 Parameters can be accessed from R like:
 

@@ -1,0 +1,79 @@
+---
+title: "Examples"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+library(pander)
+panderOptions("table.style", "grid")
+```
+
+
+```{r, include=FALSE}
+
+
+setwd("~/R Projects/Coursera/10 - DSS Capstone Project/DssSwiftKeyApp")
+source("HelpersSQLite/SQLiteHelpers.R", local = TRUE)
+source("HelpersSQLite/QueryString.R", local = TRUE)
+source("HelpersSQLite/StringToQuery.R", local = TRUE)
+
+sql_name <- "grams_db1.sqlite"
+```
+
+## Some examples ##
+
+Note, this file is generated form AppExamples.Rmd with `output: md_document` and
+embedded into the app using `includeMarkdown("AppExamles.md")` in ui.R.
+
+Those are top 10 predictors for every ngram, sorted by descending order.
+You can try to enter them into the text field and see some magic.
+
+```{r load, message=FALSE, warning=FALSE, include=FALSE}
+
+con <- SQLiteGetConn(sql_name)
+q1 <- "SELECT * FROM grams1 ORDER BY value ASC LIMIT 10"
+q2 <- "SELECT * FROM grams2 ORDER BY value ASC LIMIT 10"
+q3 <- "SELECT * FROM grams3 ORDER BY value ASC LIMIT 10"
+q4 <- "SELECT * FROM grams4 ORDER BY value ASC LIMIT 10"
+
+res1 <- dbGetQuery(con, q1)
+res2 <- dbGetQuery(con, q2)
+res3 <- dbGetQuery(con, q3)
+res4 <- dbGetQuery(con, q4)
+
+invisible(dbDisconnect(con))
+
+
+```
+
+## Top 10 4-grams ##
+
+```{r tabl_4, echo=FALSE}
+
+pander(res4[2:5])
+
+```
+
+## Top 10 3-grams ##
+
+```{r tabl_3, echo=FALSE}
+
+pander(res3[2:4])
+
+```
+
+## Top 10 2-grams ##
+
+```{r tabl_2, echo=FALSE}
+
+pander(res2[2:3])
+
+```
+
+## Top 10 1-grams ##
+
+```{r tabl_1, echo=FALSE}
+
+pander(res1[1:1])
+
+```
