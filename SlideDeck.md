@@ -60,7 +60,7 @@ Links
 For more information about structure visit:
 
 - [GitHub](https://github.com/Muhomorik/DSS_Capstone)
-- [ShinyApp](https://muhomorik.shinyapps.io/DssSwiftKeyApp/)
+- [ShinyApp](https://muhomorik.shinyapps.io/10_-_DSS_Capstone_Project/)
 
 Visit "About" and "Examples" app tab.
 

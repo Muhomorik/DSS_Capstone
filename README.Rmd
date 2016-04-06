@@ -32,7 +32,7 @@ This is a final project for [Data Science Specialization](https://www.coursera.o
 
 - [Milestone report HTML](http://htmlpreview.github.io/?https://github.com/Muhomorik/DSS_Capstone/blob/master/Milestone_Report.html)
 - [Slide deck](http://rpubs.com/Muhomorik/dssSlides), R Presentation.
-- [ShinyApp](https://muhomorik.shinyapps.io/DssSwiftKeyApp/), when running.
+- [ShinyApp](https://muhomorik.shinyapps.io/10_-_DSS_Capstone_Project/), when running.
 
 This is a **longer** version of *About* page on the Shiny Apps.
 
