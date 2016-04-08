@@ -5,11 +5,6 @@
 # http://shiny.rstudio.com
 #
 
-
-#
-#  NOTE: COPY SQLite Helpers to dir!
-#
-
 # exceptions
 # http://mazamascience.com/WorkingWithData/?p=912
 # format time.
@@ -17,9 +12,10 @@
 library(shiny)
 library(RSQLite)
 
-  source("HelpersSQLite/SQLiteHelpers.R")
-  source("HelpersSQLite/QueryString.R")
-  source("HelpersSQLite/StringToQuery.R")
+# Source globally (functions only).
+source("HelpersSQLite/SQLiteHelpers.R")
+source("HelpersSQLite/QueryString.R")
+source("HelpersSQLite/StringToQuery.R")
 
 shinyServer(function(input, output) {
   # Other objects inside the function, such as variables and functions,

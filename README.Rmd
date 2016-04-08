@@ -26,6 +26,9 @@ db_name <- "grams_db1.sqlite"
 
 Diagrams are created using [Pencil](http://pencil.evolus.vn/) (.ep file).
 
+- [ ] Zero error is back.
+- [ ] Remove rests of old reactive *searchTerms*, prediction text..
+
 # Foreword #
 
 This is a final project for [Data Science Specialization](https://www.coursera.org/specializations/jhu-data-science) at Coursera.
