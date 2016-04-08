@@ -15,10 +15,9 @@ at Coursera.
 Final words
 -----------
 
-I am slightly disappointing by the JHU and SwiftKey for ignoring the
-project.
+I am slightly disappointed by the SwiftKey for ignoring the project.
 
-I think JHU should have provided a set with predicted values to train a
+I think there should be provided a set with predicted values to train a
 model. Because predicting the Quiz results without being able to
 evaluate a model first is... tricky.
 

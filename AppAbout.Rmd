@@ -34,9 +34,9 @@ This is a final project for [Data Science Specialization](https://www.coursera.o
 
 ## Final words ##
 
-I am slightly disappointing by the JHU and SwiftKey for ignoring the project.
+I am slightly disappointed by the SwiftKey for ignoring the project.
 
-I think JHU should have provided a set with predicted values to train a model.
+I think there should be provided a set with predicted values to train a model.
 Because predicting the Quiz results without being able to evaluate a model first is... tricky.
 
 My model predicts values based on the current set, but it took me **16 HOURS** to build it on 30% corpus.

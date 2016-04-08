@@ -23,6 +23,11 @@ path_Us_twitter <- paste0(path, "/", loc.en_US, "/", file_Us_twitter)
 
 samle.dir <- "sample"
 
+# US:
 sample_Us_blogs <- paste0(samle.dir, "/", file_Us_blogs)
 sample_Us_news <- paste0(samle.dir, "/", file_Us_news)
 sample_Us_twitter <- paste0(samle.dir, "/", file_Us_twitter)
+
+# RU:
+file_Ru_blogs <- paste0(loc.ru_RU, file.blogs)
+path_Ru_blogs <- paste0(path, "/", loc.ru_RU, "/", file_Ru_blogs)
