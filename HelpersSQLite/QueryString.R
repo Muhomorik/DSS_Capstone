@@ -9,8 +9,10 @@ QueryStringLevel1 <- function(key1, limit = 20){
 
   q1 <- paste ("SELECT * FROM ", SQLiteGetTablebyNGrams(1), " WHERE ",
                "key1 LIKE '", key1, "%'",
+               " ORDER BY value ASC ",
                " LIMIT ", limit,
-               sep = "", collapse = NULL)
+               sep = "",
+               collapse = NULL)
   q1
 }
 
@@ -33,8 +35,10 @@ QueryStringLevel2 <- function(key1, key2 = NULL, limit = 20){
   }
 
   q3 <- paste (q3,
+               " ORDER BY value ASC ",
                " LIMIT ", limit,
-               sep = "", collapse = NULL)
+               sep = "",
+               collapse = NULL)
   q3
 }
 
@@ -65,8 +69,10 @@ QueryStringLevel3 <- function(key1, key2 = NULL, key3 = NULL, limit = 20){
   }
 
   q3 <- paste (q3,
+               " ORDER BY value ASC ",
                " LIMIT ", limit,
-               sep = "", collapse = NULL)
+               sep = "",
+               collapse = NULL)
   q3
 }
 
@@ -103,8 +109,10 @@ QueryStringLevel4 <- function(key1, key2 = NULL, key3 = NULL, key4 = NULL, limit
   }
 
   q3 <- paste (q3,
+               " ORDER BY value ASC ",
                " LIMIT ", limit,
-              sep = "", collapse = NULL)
+              sep = "",
+              collapse = NULL)
   q3
 }
 

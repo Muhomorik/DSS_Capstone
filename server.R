@@ -17,6 +17,10 @@
 library(shiny)
 library(RSQLite)
 
+  source("HelpersSQLite/SQLiteHelpers.R")
+  source("HelpersSQLite/QueryString.R")
+  source("HelpersSQLite/StringToQuery.R")
+
 shinyServer(function(input, output) {
   # Other objects inside the function, such as variables and functions,
   # are also instantiated for each session.
@@ -25,10 +29,62 @@ shinyServer(function(input, output) {
   # varA plus 1. This local copy of varA is not be visible in other sessions.
   # With <- or change the global var with <<-.
 
-  source("HelpersSQLite/SQLiteHelpers.R", local = TRUE)
-  source("HelpersSQLite/QueryString.R", local = TRUE)
-  source("HelpersSQLite/StringToQuery.R", local = TRUE)
-
+  # Reactive search terms, returns a vector of last X items, plitted by space.
+  searchTermsNew <- reactive({
+    split_input <- gsub("'", "", input$text, ignore.case = T) # removed by the tokenizer.
+    split_input <- strsplit(split_input, " ")
+    len <- length(split_input[[1]])
+    
+    if (len == 0) {
+      keys <- c()
+      #message("0")
+    } else if (len == 1) {
+      keys <- c(split_input[[1]][(len)] )
+      #message("1")
+    }  else if (len == 2) {
+      keys <- c(split_input[[1]][(len-1)], split_input[[1]][(len)])
+      #message("2")
+    }  else { # if (len == 3) {
+      keys <- c(split_input[[1]][(len-2)], split_input[[1]][(len-1)], split_input[[1]][(len)])
+      #message("3")
+    }
+    
+    # From: The guy in front of me just bought
+    # TO: of me just bought
+    keys1 <- keys[3]
+    keys2 <- keys[2]
+    keys3 <- keys[1]
+    
+    # message("len: ", paste(keys, sep = " ", collapse = " " ))
+    # message("key1: ", keys[3])
+    # message("key2: ", keys[2])
+    # message("key3: ", keys[1])
+    
+    # db part
+    con <- SQLiteGetConn("grams_db1.sqlite")
+    q1 <- QueryStringLevel1(keys1)
+    
+    # q1
+    res1 <- dbGetQuery(con, q1)
+    # q2
+    q2 <- QueryStringLevel2(keys1)
+    res2 <- dbGetQuery(con, q2)
+    # q3
+    q3 <- QueryStringLevel3(keys2, keys1)
+    res3 <- dbGetQuery(con, q3)    
+    #q4
+    q4 <- QueryStringLevel4(keys3, keys2, keys1)
+    res4 <- dbGetQuery(con, q4)    
+    
+    invisible(dbDisconnect(con))
+    
+    list(
+      res1 = res1[1:1], 
+      res2 = res2[2:3], 
+      res3 = res3[2:4], 
+      res4 = res4[2:5])
+  })
+  
   # Reactive search terms, returns a vector of last X items, plitted by space.
   searchTerms <- reactive({
     split_input <- gsub("'", "", input$text, ignore.case = T) # removed by the tokenizer.
@@ -61,91 +117,28 @@ shinyServer(function(input, output) {
 
   output$query1 <- DT::renderDataTable({
 
-    len <- length(searchTerms())
-
-    keys1 <- searchTerms()[(len)]
-    keys2 <- searchTerms()[(len-1)]
-    keys3 <- searchTerms()[(len-2)]
-
-    # db part
-    con <- SQLiteGetConn("grams_db1.sqlite")
-    q1 <- QueryStringLevel1(keys1)
-    res <- dbGetQuery(con, q1)
-    invisible(dbDisconnect(con))
-
-    DT::datatable(res[1:1], options = list(searching = TRUE), rownames= FALSE)
+    DT::datatable(searchTermsNew()$res1, options = list(searching = FALSE), rownames= FALSE)
   })
 
   output$query2 <- DT::renderDataTable({
 
-    len <- length(searchTerms())
-
-    keys1 <- searchTerms()[(len)]
-    keys2 <- searchTerms()[(len-1)]
-    keys3 <- searchTerms()[(len-2)]
-
-    # db part
-    con <- SQLiteGetConn("grams_db1.sqlite")
-    q1 <- QueryStringLevel2(keys1)
-    res <- dbGetQuery(con, q1)
-    invisible(dbDisconnect(con))
-
-    DT::datatable(res[2:3], options = list(searching = TRUE), rownames= FALSE)
+    DT::datatable(searchTermsNew()$res2, options = list(searching = TRUE), rownames= FALSE)
   })
 
   output$query3 <- DT::renderDataTable({
 
-    len <- length(searchTerms())
-
-    keys1 <- searchTerms()[(len)]
-    keys2 <- searchTerms()[(len-1)]
-    keys3 <- searchTerms()[(len-2)]
-
-    # db part
-    con <- SQLiteGetConn("grams_db1.sqlite")
-    q1 <- QueryStringLevel3(keys2, keys1)
-    res <- dbGetQuery(con, q1)
-    invisible(dbDisconnect(con))
-
-    DT::datatable(res[2:4], options = list(searching = TRUE), rownames= FALSE)
+    DT::datatable(searchTermsNew()$res3, options = list(searching = TRUE), rownames= FALSE)
   })
 
   output$query4 <- DT::renderDataTable({
 
-    len <- length(searchTerms())
-
-    keys1 <- searchTerms()[(len)]
-    keys2 <- searchTerms()[(len-1)]
-    keys3 <- searchTerms()[(len-2)]
-
-    # db part
-    con <- SQLiteGetConn("grams_db1.sqlite")
-    q1 <- QueryStringLevel4(keys3, keys2, keys1)
-    res <- dbGetQuery(con, q1)
-    invisible(dbDisconnect(con))
-    q1
-    DT::datatable(res[2:5], options = list(searching = TRUE, autoWidth = TRUE), rownames= FALSE)
+    DT::datatable(searchTermsNew()$res4, options = list(searching = TRUE, autoWidth = TRUE), rownames= FALSE)
   })
 
   #
   # Plots
   # Note: some leftovers.
   #
-
-  output$ngramsPlot <- renderPlot({
-
-    # db part
-    con <- SQLiteGetConn("grams_db1.sqlite")
-    q1 <- QueryStringStatusTable()
-    res <- dbGetQuery(con, q1)
-    invisible(dbDisconnect(con))
-
-    #draw the histogram with the specified number of bins
-    barplot(res$GramsSize,
-            names.arg = res$nGram,
-            main = "NGrams count", xlab = "ngram", ylab = "ngram count")
-
-  })
 
   #
   # Search terms for every table shown.
@@ -182,5 +175,27 @@ shinyServer(function(input, output) {
     } else {
       "enter more words (min 2)"
     }
+  })
+  
+  
+  output$predictionOut <- renderText({ 
+    pred4 <- searchTermsNew()$res4
+    pred3 <- searchTermsNew()$res3
+    pred2 <- searchTermsNew()$res2
+    pred1 <- searchTermsNew()$res1
+    
+    if(length(pred4$key4) != 0){
+      pred4[1, c("key4")]
+    } else if (length(pred3$key3) != 0) {
+      pred3[1, c("key3")]
+    } else if (length(pred2$key2) != 0){
+      pred2[1, c("key2")]
+    } else if (length(pred1$key1) != 0) {
+      pred1[1, c("key1")]
+    } else {
+      "* no idea ;) *"      
+    }
+
+    #searchTermsNew()$res1
   })
 })
