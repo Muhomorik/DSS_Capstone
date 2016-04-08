@@ -64,7 +64,7 @@ linesMax.Twiter <- 2360148
 scaling <-  c(1, 4, 14, 3, 3) # w/o stopwords, 1gram, 2 gram, etc
 
 #                      1  2   3  4  5
-scaling.stopword <-  c(1, 3, 3, 3, 3) # 1gram, 2 gram, etc
+scaling.stopword <-  c(1, 5, 5, 5, 5) # 1gram, 2 gram, etc
 
 # Filter parameters, everything below or equal to will be dropped from results.
 # Index = ngrams number.
@@ -72,7 +72,7 @@ scaling.stopword <-  c(1, 3, 3, 3, 3) # 1gram, 2 gram, etc
 # Empty Table columns for printing.
 df = StatusTableGramsEmptyDf()
 
-db_file <- "grams_db1.sqlite"
+db_file <- "grams_db1_ru_blogs.sqlite"
 cat("Using database: ", db_file, "\n")
 
 # Open db connection.
@@ -90,7 +90,7 @@ for(ngrams.i in nGrams.Min:nGrams.Max){
     linesToRead <- ceiling(linesMax.Twiter/scaling.stopword[ngrams.i])
   } 
   
-  linesTwitter.Train <- ReadAndCleanFile(path_Us_twitter, nlines = linesToRead)
+  linesTwitter.Train <- ReadAndCleanFile(path_Ru_blogs, nlines = linesToRead)
   
   if(linesInFIle == -1) linesInFIle <- length(linesTwitter.Train)
   
