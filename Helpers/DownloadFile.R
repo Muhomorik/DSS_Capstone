@@ -6,10 +6,10 @@ DownloadFile <- function(force = FALSE){
   #   force: overwrites file if true.
 
   fileUrl <- "https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
-  
+
   if (!dir.exists(path) || (force == TRUE)){
     message("Data is missing, downloading into: ", getwd())
-    
+
     # Donload.
     download.file(fileUrl, fileName, method = "auto") # Don't use curl on Windows.
     unzip ("Coursera-SwiftKey.zip", exdir = "Coursera-SwiftKey")
@@ -17,3 +17,6 @@ DownloadFile <- function(force = FALSE){
     message("File exists in: ", getwd())
   }
 }
+
+# Example:
+#DownloadFile()

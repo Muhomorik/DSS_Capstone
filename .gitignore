@@ -24,3 +24,7 @@ vignettes/*.pdf
 .RData
 
 rsconnect/
+
+# data files
+Coursera-SwiftKey.zip
+Coursera-SwiftKey/

@@ -1,4 +1,5 @@
 path <- "Coursera-SwiftKey/final"
+fileName <- "Coursera-SwiftKey.zip"
 
 loc.de_DE <- "de_DE"
 loc.en_US <- "en_US"
