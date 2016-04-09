@@ -8,8 +8,7 @@ About
 
 Diagrams are created using [Pencil](http://pencil.evolus.vn/) (.ep file).
 
--   \[ \] Zero error is back.
--   \[ \] Remove rests of old reactive *searchTerms*, prediction text..
+Note to myself: non-reactive version seems to be faster.
 
 Foreword
 ========

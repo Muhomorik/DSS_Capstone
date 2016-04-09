@@ -31,18 +31,15 @@ shinyServer(function(input, output) {
     split_input <- strsplit(split_input, " ")
     len <- length(split_input[[1]])
     
+    # remake to real split in one line.
     if (len == 0) {
-      keys <- c()
-      #message("0")
+      keys <- c("" ,"" ,"" )
     } else if (len == 1) {
-      keys <- c(split_input[[1]][(len)] )
-      #message("1")
+      keys <- c("" , "", split_input[[1]][(len)] )
     }  else if (len == 2) {
-      keys <- c(split_input[[1]][(len-1)], split_input[[1]][(len)])
-      #message("2")
+      keys <- c("", split_input[[1]][(len-1)], split_input[[1]][(len)] )
     }  else { # if (len == 3) {
       keys <- c(split_input[[1]][(len-2)], split_input[[1]][(len-1)], split_input[[1]][(len)])
-      #message("3")
     }
     
     # From: The guy in front of me just bought
@@ -78,35 +75,10 @@ shinyServer(function(input, output) {
       res1 = res1[1:1], 
       res2 = res2[2:3], 
       res3 = res3[2:4], 
-      res4 = res4[2:5])
+      res4 = res4[2:5],
+      keys = keys)
   })
   
-  # Reactive search terms, returns a vector of last X items, plitted by space.
-  searchTerms <- reactive({
-    split_input <- gsub("'", "", input$text, ignore.case = T) # removed by the tokenizer.
-    split_input <- strsplit(split_input, " ")
-    len <- length(split_input[[1]])
-
-    if (len == 0) {
-      keys1 <- c()
-      #message("0")
-    } else if (len == 1) {
-      keys1 <- c(split_input[[1]][(len)] )
-      #message("1")
-    }  else if (len == 2) {
-      keys1 <- c(split_input[[1]][(len-1)], split_input[[1]][(len)])
-      #message("2")
-    }  else { # if (len == 3) {
-      keys1 <- c(split_input[[1]][(len-2)], split_input[[1]][(len-1)], split_input[[1]][(len)])
-      #message("3")
-    }
-
-    # From: The guy in front of me just bought
-    # TO: of me just bought
-
-    keys1
-  })
-
   #
   # Prediction results
   #
@@ -132,45 +104,32 @@ shinyServer(function(input, output) {
   })
 
   #
-  # Plots
-  # Note: some leftovers.
-  #
-
-  #
   # Search terms for every table shown.
   # With some leftovers...
   #
 
   output$predsearch1 <- renderText({
-    len <- length(searchTerms())
-    paste(searchTerms()[len], "*" , sep = "" , collapse = " ")
+    keys <- searchTermsNew()$keys
+    len <- length(keys)
+    paste(keys[len], "*" , sep = "" , collapse = " ")
   })
 
   output$predsearch2 <- renderText({
-    len <- length(searchTerms())
-    if(TRUE){
-      paste(searchTerms()[(len-1):(len)], "*" , sep = "" , collapse = " ")
-    } else {
-      "enter more words"
-    }
+    keys <- searchTermsNew()$keys
+    len <- length(keys)
+    paste(keys[(len-1):(len)], "*" , sep = "" , collapse = " ")
   })
 
   output$predsearch3 <- renderText({
-    len <- length(searchTerms())
-    if(TRUE){
-      paste(searchTerms()[(len-1):(len)], "*" , sep = "" , collapse = " ")
-    } else {
-      "enter more words (min 1)"
-    }
+    keys <- searchTermsNew()$keys
+    len <- length(keys)
+    paste(keys[(len-1):(len)], "*" , sep = "" , collapse = " ")
   })
 
   output$predsearch4 <- renderText({
-    len <- length(searchTerms())
-    if(TRUE){
-      paste(searchTerms()[(len-2):(len)], "*" , sep = "" , collapse = " ")
-    } else {
-      "enter more words (min 2)"
-    }
+    keys <- searchTermsNew()$keys
+    len <- length(keys)
+    paste(keys[(len-2):(len)], "*" , sep = "" , collapse = " ")
   })
   
   
@@ -192,6 +151,5 @@ shinyServer(function(input, output) {
       "* no idea ;) *"      
     }
 
-    #searchTermsNew()$res1
   })
 })
